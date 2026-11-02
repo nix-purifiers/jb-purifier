@@ -1,0 +1,16 @@
+{
+  "contentHash": "0648e0ecbd7884edd2ea72f2cfbff0a3697a6d5e095863f3b2504762572a9814",
+  "hashes": {
+    "github.com/jsonnet-libs/xtd": "sha256-MWinI7gX39UIDVh9kzkHFH6jsKZoI294paQUWd/4+ag="
+  },
+  "inputs": {
+    "jsonnetfile.json": "4b98d08cd187a9243f050656654470261ea79caa200cf5e7f717ee54223d0e0b",
+    "jsonnetfile.lock.json": "dff0e6156af869de4d0bf879df006977621aa400380115bbf074304d34460dda"
+  },
+  "outputs": {
+    "main": {
+      "file": "main.jsonnet"
+    }
+  },
+  "version": 1
+}

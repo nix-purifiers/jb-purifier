@@ -1,0 +1,5 @@
+/result*
+.jb-purifier
+__pycache__/
+*.pyc
+vendor
