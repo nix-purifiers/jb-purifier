@@ -160,6 +160,9 @@ registry or native plugin package requiring a Pages repository.
 
 ## Credits
 
+The purifier idea was inspired by nixcloud's
+[cargo (libnix)](https://github.com/nixcloud/cargo).
+
 [Jsonnet Bundler](https://github.com/jsonnet-bundler/jsonnet-bundler),
 [Jsonnet](https://jsonnet.org/), and
 [xtd](https://github.com/jsonnet-libs/xtd) provide the native tools and test
