@@ -72,7 +72,10 @@ def prepare(root, sidecar, native):
 
 
 def do_lock(args, root, sidecar, native, update=False):
-    old = read_json(sidecar) if sidecar.exists() else None
+    try:
+        old = read_json(sidecar) if sidecar.exists() else None
+    except ValueError:
+        old = None
     entries = args.entry or []
     outputs = {}
     if entries:
@@ -91,7 +94,11 @@ def do_lock(args, root, sidecar, native, update=False):
         stage = Path(work)
         shutil.copyfile(root / 'jsonnetfile.json', stage / 'jsonnetfile.json')
         seed = native if native.exists() else root / 'jsonnetfile.lock.json'
-        if seed.exists():
+        try:
+            seed_data = json.loads(seed.read_bytes()) if seed.exists() else None
+        except ValueError:
+            seed_data = None
+        if seed_data is not None:
             shutil.copyfile(seed, stage / 'jsonnetfile.lock.json')
         run([os.environ.get('JB_PURIFIER_JB', 'jb'), 'update' if update else 'install', *args.packages], cwd=stage)
         resolved_path = stage / 'jsonnetfile.lock.json'
@@ -106,7 +113,7 @@ def do_lock(args, root, sidecar, native, update=False):
             hashes[dep['name']] = value
         # Native install may change formatting; preserve bytes when its
         # semantic resolution is unchanged.
-        original = seed.read_bytes() if seed.exists() else None
+        original = seed.read_bytes() if seed_data is not None else None
         native_bytes = original if original is not None and json.loads(original) == resolved else resolved_path.read_bytes()
         candidate = stage / 'candidate-native.json'
         candidate.write_bytes(native_bytes)

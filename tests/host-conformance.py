@@ -37,7 +37,10 @@ with tempfile.TemporaryDirectory(prefix='jb-conformance-') as temp:
         command('jb-purifier', 'lock', cwd=project)
         command('jb-purifier', 'lock', cwd=project)
         assert before == (native.read_bytes(), sidecar.read_bytes()), 'relock changed fixture bytes'
-        print('conformance-relock: byte-identical', flush=True)
+        sidecar.write_text('invalid JSON')
+        command('jb-purifier', 'lock', cwd=project)
+        assert before == (native.read_bytes(), sidecar.read_bytes()), 'lock did not repair malformed companion'
+        print('conformance-relock: byte-identical; malformed companion repaired', flush=True)
     if mode in ('all', 'external'):
         command('jb-purifier', 'prefetch', cwd=project)
         command('jb', 'install', cwd=project)
