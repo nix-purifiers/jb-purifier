@@ -158,6 +158,15 @@ jb-purifier publish \
 Jsonnet Bundler consumes Git repositories directly; it has no package
 registry or native plugin package requiring a Pages repository.
 
+## Evaluated data projection
+
+Each evaluated `packages.<name>` exports `projections.json`. Its
+`files.default` is the immutable evaluated `<name>.json` document; its separate
+`catalog` records producer identity and digest. Ordinary tools can read the
+file directly, including Helm through `--values`. This does not publish
+Jsonnet source as another language's package. The `json-projection` check
+builds the example and consumes its evaluated JSON with ordinary Helm.
+
 ## Credits
 
 The purifier idea was inspired by nixcloud's
