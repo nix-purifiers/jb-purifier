@@ -6,6 +6,7 @@
   runCommand,
   fetchgit,
   jsonnet,
+  python3,
   gnutar,
   gzip,
   purifier,
@@ -49,12 +50,17 @@ let
   };
   packages = lib.mapAttrs (
     name: output:
-    stdenvNoCC.mkDerivation {
+    stdenvNoCC.mkDerivation (finalAttrs: {
       name = "jsonnet-${name}";
       src = source;
       nativeBuildInputs = [ jsonnet ];
       dontConfigure = true;
       dontFixup = true;
+      passthru.projections = purifier.dataProjections {
+        producer = finalAttrs.finalPackage;
+        files.default = "${name}.json";
+        inherit runCommand python3;
+      };
       buildPhase = ''
         runHook preBuild
         jsonnet -J ${vendor} ${lib.escapeShellArg output.file} > "$TMPDIR/output.json"
@@ -64,7 +70,7 @@ let
         mkdir -p "$out"
         cp "$TMPDIR/output.json" "$out/${name}.json"
       '';
-    }
+    })
   ) lock.outputs;
   tests = runCommand "jb-project-tests" { nativeBuildInputs = [ jsonnet ]; } (
     ''

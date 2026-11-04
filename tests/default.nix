@@ -45,6 +45,12 @@ let
   };
 in
 {
+  json-projection = import shared.testFixtures.jsonConsumer {
+    inherit pkgs;
+    producer = result.packages.default or (builtins.head (builtins.attrValues result.packages));
+    expectedKey = "purified";
+    expectedValue = true;
+  };
   formatting =
     pkgs.runCommand "jb-formatting"
       {
