@@ -29,7 +29,7 @@
   testFiles ? [ ],
 }:
 let
-  readLock = import ./read-lock.nix { inherit lib; };
+  readLock = import ../../lib-overlays/default/read-lock.nix { inherit lib; };
   lock = purifier.checkLock (readLock {
     inherit src lockFile jsonnetLock;
   });
