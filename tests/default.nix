@@ -6,7 +6,9 @@ let
   lock = self.lib.jb-purifier.readLock { src = fixture; };
   # Use the same library source that the overlay's builder carries.
   shared = import (self.inputs.purifier + "/nix/lib") { inherit (pkgs) lib; };
-  vendor = pkgs.callPackage ../nix/vendor.nix { purifier = shared; } { inherit lock; };
+  vendor = pkgs.callPackage ../pkgs/build-jb-project/vendor.nix { purifier = shared; } {
+    inherit lock;
+  };
   mkErrorCheck =
     case:
     pkgs.runCommand "jb-conformance-${case}"

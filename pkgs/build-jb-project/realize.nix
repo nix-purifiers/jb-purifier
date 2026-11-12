@@ -15,13 +15,13 @@ let
     lockFile = builtins.toPath lockFile;
     jsonnetLock = builtins.toPath jsonnetLock;
   };
-  lock = (import ./read-lock.nix { inherit (pkgs) lib; }) args;
+  lock = (import ../../lib-overlays/default/read-lock.nix { inherit (pkgs) lib; }) args;
 in
 if target == "vendor" then
   pkgs.callPackage ./vendor.nix { inherit purifier; } { inherit lock; }
 else if target == "runtime" then
   pkgs.runCommand "jb-runtime" { } ''ln -s @runtime@ "$out"''
 else if target == "release" then
-  (pkgs.callPackage ./build-project.nix { inherit purifier; } args).release
+  (pkgs.callPackage ./default.nix { inherit purifier; } args).release
 else
   throw "jb-purifier: unknown realization target ${target}"

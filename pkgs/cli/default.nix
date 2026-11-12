@@ -17,14 +17,14 @@
 stdenvNoCC.mkDerivation {
   pname = "jb-purifier";
   version = "0.1.0";
-  src = ../.;
+  src = ../..;
   nativeBuildInputs = [ makeWrapper ];
   dontBuild = true;
   installPhase = ''
     mkdir -p "$out/bin" "$out/lib/jb-purifier"
-    cp -r jb_purifier nix "$out/lib/jb-purifier/"
+    cp -r jb_purifier pkgs lib-overlays "$out/lib/jb-purifier/"
     install -m755 bin/jb-purifier "$out/bin/jb-purifier"
-    substituteInPlace "$out/lib/jb-purifier/nix/realize.nix" \
+    substituteInPlace "$out/lib/jb-purifier/pkgs/build-jb-project/realize.nix" \
       --replace-fail '@nixpkgs@' '${nixpkgsSrc}' \
       --replace-fail '@purifier@' '${purifierSrc}' \
       --replace-fail '@runtime@' "$out"
@@ -43,7 +43,7 @@ stdenvNoCC.mkDerivation {
       } \
       --prefix PYTHONPATH : "$out/lib/jb-purifier" \
       --set JB_PURIFIER_JB ${jsonnet-bundler}/bin/jb \
-      --set JB_PURIFIER_REALIZE "$out/lib/jb-purifier/nix/realize.nix"
+      --set JB_PURIFIER_REALIZE "$out/lib/jb-purifier/pkgs/build-jb-project/realize.nix"
     makeWrapper "$out/bin/jb-purifier" "$out/bin/jb" --add-flags "native --"
     ln -s ${jsonnet}/bin/jsonnet "$out/bin/jsonnet"
     ln -s ${jsonnet-language-server}/bin/jsonnet-language-server "$out/bin/jsonnet-language-server"
